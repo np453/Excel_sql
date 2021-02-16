@@ -1,0 +1,19 @@
+{
+  "name": "excel_node",
+  "version": "1.0.0",
+  "description": "read nd store excell file",
+  "main": "app.js",
+  "scripts": {
+    "start":"nodemon app.js"
+  },
+  "author": "Naman",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "exceljs": "^4.2.0",
+    "express": "^4.17.1",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.7",
+    "path": "^0.12.7"
+  }
+}
