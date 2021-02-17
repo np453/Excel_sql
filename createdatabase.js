@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const Excel = require('exceljs');
 const path = require('path');
 const mysql = require('mysql');
 
@@ -14,8 +15,7 @@ var connection = mysql.createPool({
     port: '3306',
     user: 'root',
     password: 'naman0179',
-    insecureAuth : true,
-    database: 'mydb'
+    insecureAuth : true
 });
 
 connection.getConnection((err)=>{
@@ -23,12 +23,13 @@ connection.getConnection((err)=>{
         throw err;
     }
     console.log("Connected!");
-    const sql = "SELECT * FROM records";
-    connection.query(sql,(err,result,fields)=>{
+    const sql = "CREATE DATABASE mydb";
+    connection.query(sql,(err,result)=>{
         if(err) throw err;
-        console.log(result);
+        console.log("Database created!");
     });
  })   
+
 
 app.listen(PORT, function() {
     console.log(`App running on port ${PORT}`);

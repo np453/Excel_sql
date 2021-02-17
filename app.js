@@ -21,30 +21,6 @@ var connection = mysql.createPool({
     database: 'mydb'
 });
 
-// connection.getConnection((err)=>{
-//     if(err) {
-//         throw err;
-//     }
-//     console.log("Connected!");
-//     const sql = "CREATE TABLE records (id INT AUTO_INCREMENT PRIMARY KEY, Regno VARCHAR(255) NOT NULL, session VARCHAR(255) NOT NULL, semester INT NOT NULL, Semester_type VARCHAR(255) NOT NULL, Programme VARCHAR(255) NOT NULL, Branch VARCHAR(255) NOT NULL, SPI INT NOT NULL, P_CPI INT NOT NULL, CPI INT NOT NULL, Result VARCHAR(255) NOT NULL)";
-//     connection.query(sql,(err,result)=>{
-//         if(err) throw err;
-//         console.log("Table created!");
-//     });
-//  })   
-    // connection.getConnection((err)=>{
-    //     if(err) {
-    //         throw err;
-    //     }
-    //     console.log("Connected!");
-    //     const sql = "CREATE TABLE records (id INT AUTO_INCREMENT PRIMARY KEY, Regno VARCHAR(255) NOT NULL, session VARCHAR(255) NOT NULL, semester INT NOT NULL, Semester_type VARCHAR(255) NOT NULL, Programme VARCHAR(255) NOT NULL, Branch VARCHAR(255) NOT NULL, SPI INT NOT NULL, P_CPI INT NOT NULL, CPI INT NOT NULL, Result VARCHAR(255) NOT NULL)";
-    //     connection.query(sql,(err,result)=>{
-    //         if(err) throw err;
-    //         console.log("Table created!");
-    //     });
-    // })
-    
-
 
 const subject_code = ["PTSW","DN","BM","BT","CL","EN","GE","ST","CM","CC","CS","EE","PE","EM","FE","GI","IS","MT","PR","TR","VL","PS","PD","TH","SP","SW"];
 const subject_array= [];
@@ -82,16 +58,14 @@ const current_year= d.getFullYear();
 console.log(current_year);
 wb.xlsx.readFile(filepath).then(()=>{
     const sheet = wb.getWorksheet("M.Tech.");//opening worksheet
-    // console.log(sheet.actualRowCount);
-    queryconnection= async (i)=>{
+    queryconnection= async (i)=>{ // funtion for inserting data into out table
         await connection.getConnection((err,result)=>{
                             
             console.log("database connected!");
-            console.log(i)
+            // query for inserting data
             var sql = `INSERT INTO records (Regno, session, semester, Semester_type, Programme, Branch, SPI, P_CPI, CPI, Result) VALUES ("${sheet.getRow(i).getCell(1).value}",${sheet.getRow(i).getCell(2).value},${sheet.getRow(i).getCell(3).value},"${sheet.getRow(i).getCell(4).value}","${sheet.getRow(i).getCell(5).value}", "${sheet.getRow(i).getCell(6).value.toString()}",${sheet.getRow(i).getCell(7).value},${sheet.getRow(i).getCell(8).value},${sheet.getRow(i).getCell(9).value},"${sheet.getRow(i).getCell(10).value}")`;
             result.query(sql, (err,result)=>{
                 if(err) throw err;
-                // result.release();
                 console.log(`${i} data inserted!`);
             })
             
@@ -102,12 +76,12 @@ wb.xlsx.readFile(filepath).then(()=>{
         var temp = sheet.getRow(i).getCell(1).value;
         var year = temp.slice(0,4);
         console.log(year);
-        if(year<=current_year){
+        if(year<=current_year){ // checking for valid year
             console.log("valid year");
             var branch_code = temp.slice(4,temp.length-2);
-            if(subject_code.includes(branch_code)){
+            if(subject_code.includes(branch_code)){ // checking for valid branch code
                 console.log("valid branch");
-                if(sheet.getRow(i).getCell(6).value == subject_array[branch_code]){
+                if(sheet.getRow(i).getCell(6).value == subject_array[branch_code]){ // checking for valid branch name
                     console.log("valid branch name");
                     queryconnection(i);
                     // connection.end();
@@ -125,14 +99,6 @@ wb.xlsx.readFile(filepath).then(()=>{
         }
         
     }
-    // for(var i=0;i<=15;i++){
-    //      connection.getConnection((err,result)=>{
-    //          result.release();
-    //          if (err) console.log(err.stack);
-    //          console.log("it works!!!")
-    //      })
-    //     // connection.end();
-    // }
 })
 
 
